@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+
+# f2py build artifacts
+src/pynastran95/_fortran/_obj/
+src/pynastran95/_fortran/_f2py_build/
+src/pynastran95/_fortran/_nastran_core*.so
+src/pynastran95/_fortran/_nastran_coremodule.c
+src/pynastran95/_fortran/_nastran_core-f2pywrappers.f
+src/pynastran95/_fortran/libnastran.a
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Testing
+.pytest_cache/
+
+# UV
+uv.lock
