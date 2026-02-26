@@ -1,1 +1,29 @@
-build/
+# Object files and binaries
+*.o
+build/nastrn
+build/chkfil
+build/_f2py_build/
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+*.so
+.venv/
+
+# NASTRAN scratch/output
+test/scratch_*/
+test/*.out
+test/*.log
+test/*.dic
+test/*.nptp
+test/*.inp
+test/fort.*
+
+# pynastran95 build artifacts
+pynastran95/src/pynastran95/_data/bin/
+pynastran95/src/pynastran95/_data/rf/
+pynastran95/src/pynastran95/_fortran/_obj/
+pynastran95/src/pynastran95/_fortran/_f2py_build/
+pynastran95/src/pynastran95/_fortran/_nastran_core*.so
+pynastran95/src/pynastran95/_fortran/libnastran.a

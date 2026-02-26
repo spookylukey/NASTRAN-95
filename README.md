@@ -19,8 +19,7 @@ NOTE: There is no technical support available for this software.
 ### Prerequisites
 
 - **gfortran** (tested with 13.3.0 on Ubuntu 24.04; other versions may work)
-- **GNU make** or just a shell — no Makefile is provided; the build is a
-  straightforward compile-and-link
+- **GNU make**
 - x86-64 Linux (little-endian). Other architectures have not been tested.
 
 On Debian/Ubuntu:
@@ -31,23 +30,16 @@ sudo apt install gfortran
 
 ### Quick Build
 
-The `build/` directory contains pre-cleaned, patched source files and a
-compiled executable. To rebuild from scratch:
+The `build/` directory contains cleaned, patched source files and a Makefile.
+To build:
 
 ```bash
 cd build
-
-# Compile all Fortran sources (takes ~60 seconds)
-FLAGS="-std=legacy -fno-range-check -w -fallow-argument-mismatch -fallow-invalid-boz -fno-automatic"
-for f in src_mis/*.f src_mds/*.f src_bd/*.f src_bin/*.f stubs.f; do
-    gfortran -c $FLAGS "$f"
-done
-
-# Link (exclude chkfil.o — it has its own PROGRAM main)
-ls *.o | grep -v chkfil.o | xargs gfortran $FLAGS -o nastrn
+make
 ```
 
-The executable is written to `build/nastrn` (~12 MB).
+This compiles all Fortran sources (~60 seconds) and links the `nastrn`
+executable (~12 MB).
 
 ### Compiler Flags Explained
 

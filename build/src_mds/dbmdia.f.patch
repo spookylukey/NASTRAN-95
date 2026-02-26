@@ -1,0 +1,2 @@
+--- The DATA statement tries to put CHARACTER into INTEGER.
+--- Replace with Hollerith or integer BOZ.

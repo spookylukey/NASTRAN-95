@@ -3,14 +3,17 @@
 # Usage: ./run_nastran.sh <input_file> [output_file]
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
 INPUT="$1"
 BASE=$(basename "$INPUT" .inp)
 OUTPUT="${2:-${BASE}.test.out}"
-SCRATCH="/home/exedev/nastran/test/scratch_${BASE}"
+SCRATCH="$SCRIPT_DIR/scratch_${BASE}"
 
 mkdir -p "$SCRATCH"
 
-export RFDIR="/home/exedev/nastran/rf_clean"
+export RFDIR="$REPO_ROOT/rf_clean"
 export DBMEM=12000000
 export OCMEM=2000000
 export DIRCTY="$SCRATCH"
@@ -27,7 +30,7 @@ for i in $(seq 11 23); do
     export FTN${i}="${SCRATCH}/ftn${i}"
 done
 
-/home/exedev/nastran/build/nastrn < "$INPUT" > "$OUTPUT" 2>&1
+"$REPO_ROOT/build/nastrn" < "$INPUT" > "$OUTPUT" 2>&1
 RC=$?
 
 # Check results
