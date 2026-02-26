@@ -30,19 +30,32 @@ See [docs/getting-started.md](docs/getting-started.md) for full documentation.
 
 ## Installation
 
+First, build the NASTRAN-95 Fortran binary (requires gfortran):
+
+```bash
+cd build
+make          # compiles ~1850 Fortran sources (~60 seconds)
+cd ..
+```
+
+Then install the Python package:
+
 ```bash
 cd pynastran95
 uv venv
 uv pip install -e ".[dev]"
+```
 
-# Optional: build the f2py extension (~60 seconds)
-python -m pynastran95._fortran.build_ext
+Optionally, build the f2py extension for in-process execution:
+
+```bash
+.venv/bin/python -m pynastran95._fortran.build_ext
 ```
 
 ## Testing
 
 ```bash
-python -m pytest tests/ -v
+.venv/bin/python -m pytest tests/ -v
 ```
 
 ## Architecture
