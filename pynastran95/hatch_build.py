@@ -97,9 +97,21 @@ class NastranBuildHook(BuildHookInterface):
         }
 
         # Mark wheel as platform-specific (contains native binary)
-        # This makes the wheel tag e.g. cp312-cp312-linux_x86_64
+        # We use py3-none-<platform> because nastrn is a standalone
+        # executable, not a CPython extension module. Using infer_tag
+        # would produce cp312-cp312-linux_x86_64 which pins to a
+        # specific CPython ABI, potentially forcing source builds of
+        # dependencies like numpy.
         build_data["pure_python"] = False
-        build_data["infer_tag"] = True
+        build_data["infer_tag"] = False
+
+        from packaging.tags import sys_tags
+
+        tag = next(
+            t for t in sys_tags()
+            if "manylinux" not in t.platform and "musllinux" not in t.platform
+        )
+        build_data["tag"] = f"py3-none-{tag.platform}"
 
     def _compile_nastran(
         self,
