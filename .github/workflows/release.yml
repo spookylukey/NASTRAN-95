@@ -47,7 +47,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
-          install: mingw-w64-ucrt-x86_64-gcc-fortran
+          install: mingw-w64-ucrt-x86_64-gcc-fortran make
 
       - name: Install cibuildwheel
         run: pip install cibuildwheel
@@ -60,11 +60,11 @@ jobs:
             pynastran95
         env:
           CIBW_BUILD: "cp312-win_amd64 cp313-win_amd64"
-          # Use MSYS2 gfortran on PATH
+          # Use MSYS2 gfortran + make on PATH
           CIBW_ENVIRONMENT_WINDOWS: >-
-            PATH="D:\\a\\_temp\\msys64\\ucrt64\\bin;$PATH"
-          # No choco install needed — MSYS2 provides gfortran
-          CIBW_BEFORE_ALL_WINDOWS: ""
+            PATH="D:\\a\\_temp\\msys64\\ucrt64\\bin;D:\\a\\_temp\\msys64\\usr\\bin;$PATH"
+          # Pre-build nastrn once using MSYS2 make; skip pyproject.toml before-all (choco)
+          CIBW_BEFORE_ALL_WINDOWS: "make -C build FC=gfortran"
 
       - uses: actions/upload-artifact@v4
         with:

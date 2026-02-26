@@ -63,11 +63,20 @@ path = "hatch_build.py"
 [tool.cibuildwheel]
 build = ["cp312-manylinux_x86_64", "cp313-manylinux_x86_64", "cp312-win_amd64", "cp313-win_amd64"]
 test-requires = ["pytest"]
-test-command = "python -c \"import pynastran95; print(pynastran95.__version__)\""
+test-command = "python -c \"import pynastran95; from pynastran95._data import get_executable; exe = get_executable(); assert exe is not None, 'bundled binary missing'; print(f'pynastran95 {pynastran95.__version__} - binary at {exe}')\""
 
 [tool.cibuildwheel.linux]
-before-all = "yum install -y gcc-gfortran || apk add gfortran || (apt-get update && apt-get install -y gfortran)"
+# Install gfortran + make, then compile nastrn once (before-all runs once per
+# container). The hatch build hook copies build/nastrn into each wheel instead
+# of recompiling per Python version.
+before-all = [
+    "yum install -y gcc-gfortran make || apk add gfortran make || (apt-get update && apt-get install -y gfortran make)",
+    "make -C build",
+]
 repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel} || cp {wheel} {dest_dir}/"
 
 [tool.cibuildwheel.windows]
-before-all = "choco install mingw -y"
+before-all = [
+    "choco install mingw -y",
+    "mingw32-make -C build FC=gfortran",
+]
