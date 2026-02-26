@@ -20,6 +20,13 @@ src/pynastran95/_fortran/libnastran.a
 .vscode/
 *.swp
 
+# Build hook generated data
+src/pynastran95/_data/bin/
+src/pynastran95/_data/rf/
+
+# Wheel output
+wheelhouse/
+
 # Testing
 .pytest_cache/
 

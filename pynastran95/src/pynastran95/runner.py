@@ -20,10 +20,28 @@ from pynastran95.parser import (
     parse_shear_stresses,
 )
 
-# Default paths relative to the repo root
+# Default paths: prefer bundled data, fall back to repo layout for dev
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
-_DEFAULT_EXECUTABLE = _REPO_ROOT / "build" / "nastrn"
-_DEFAULT_RFDIR = _REPO_ROOT / "rf_clean"
+
+
+def _default_executable() -> Path:
+    """Find the nastrn executable (bundled or repo)."""
+    from pynastran95._data import get_executable
+
+    bundled = get_executable()
+    if bundled is not None:
+        return bundled
+    return _REPO_ROOT / "build" / "nastrn"
+
+
+def _default_rfdir() -> Path:
+    """Find the rigid format directory (bundled or repo)."""
+    from pynastran95._data import get_rfdir
+
+    bundled = get_rfdir()
+    if bundled is not None:
+        return bundled
+    return _REPO_ROOT / "rf_clean"
 
 
 class NastranRunner:
@@ -54,13 +72,13 @@ class NastranRunner:
         mode: Literal["subprocess", "f2py"] = "subprocess",
     ) -> None:
         self.mode = mode
-        self.rfdir = Path(rfdir) if rfdir else _DEFAULT_RFDIR
+        self.rfdir = Path(rfdir) if rfdir else _default_rfdir()
         self.dbmem = dbmem
         self.ocmem = ocmem
         self.scratch_root = Path(scratch_root) if scratch_root else None
 
         if mode == "subprocess":
-            self.executable = Path(executable) if executable else _DEFAULT_EXECUTABLE
+            self.executable = Path(executable) if executable else _default_executable()
             if not self.executable.exists():
                 msg = f"NASTRAN executable not found: {self.executable}"
                 raise FileNotFoundError(msg)
