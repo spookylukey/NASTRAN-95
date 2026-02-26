@@ -35,13 +35,19 @@ class NastranBuildHook(BuildHookInterface):
         root = Path(self.root)
         # The NASTRAN repo root is one level up from pynastran95/
         repo_root = root.parent
-        src_mis = repo_root / "build" / "src_mis"
-        src_mds = repo_root / "build" / "src_mds"
-        src_bd = repo_root / "build" / "src_bd"
-        src_bin = repo_root / "build" / "src_bin"
-        stubs = repo_root / "build" / "stubs.f"
-        include_dir = repo_root / "build"
+        build_dir = repo_root / "build"
+        src_mis = build_dir / "src_mis"
+        src_mds = build_dir / "src_mds"
+        src_bd = build_dir / "src_bd"
+        src_bin = build_dir / "src_bin"
+        stubs = build_dir / "stubs.f"
+        include_dir = build_dir
         rf_clean = repo_root / "rf_clean"
+
+        # For editable (dev) installs, skip compilation entirely.
+        # The runner already falls back to build/nastrn and rf_clean/ in the repo.
+        if version == "editable":
+            return
 
         # Target directories inside the package
         pkg_data = root / "src" / "pynastran95" / "_data"
@@ -60,9 +66,15 @@ class NastranBuildHook(BuildHookInterface):
             print(f"Using pre-built executable: {prebuilt}")
             shutil.copy2(prebuilt, exe_path)
         elif not exe_path.exists():
-            self._compile_nastran(
-                src_mis, src_mds, src_bd, src_bin, stubs, include_dir, exe_path
-            )
+            # Try to use the binary from build/nastrn if already compiled via make
+            repo_exe = build_dir / ("nastrn.exe" if is_windows else "nastrn")
+            if repo_exe.exists():
+                print(f"Copying pre-built executable from {repo_exe}")
+                shutil.copy2(repo_exe, exe_path)
+            else:
+                self._compile_nastran(
+                    src_mis, src_mds, src_bd, src_bin, stubs, include_dir, exe_path
+                )
 
         # Make executable
         if not is_windows:
