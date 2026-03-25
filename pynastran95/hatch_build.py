@@ -62,19 +62,18 @@ class NastranBuildHook(BuildHookInterface):
 
         # Check if pre-built executable exists (set by CIBW_BEFORE_BUILD or manual)
         prebuilt = os.environ.get("NASTRAN_PREBUILT_EXE")
+        repo_exe = build_dir / ("nastrn.exe" if is_windows else "nastrn")
         if prebuilt and Path(prebuilt).exists():
             print(f"Using pre-built executable: {prebuilt}")
             shutil.copy2(prebuilt, exe_path)
+        elif repo_exe.exists():
+            # Use the binary from build/nastrn (compiled via make or cibw before-all)
+            print(f"Copying pre-built executable from {repo_exe}")
+            shutil.copy2(repo_exe, exe_path)
         elif not exe_path.exists():
-            # Try to use the binary from build/nastrn if already compiled via make
-            repo_exe = build_dir / ("nastrn.exe" if is_windows else "nastrn")
-            if repo_exe.exists():
-                print(f"Copying pre-built executable from {repo_exe}")
-                shutil.copy2(repo_exe, exe_path)
-            else:
-                self._compile_nastran(
-                    src_mis, src_mds, src_bd, src_bin, stubs, include_dir, exe_path
-                )
+            self._compile_nastran(
+                src_mis, src_mds, src_bd, src_bin, stubs, include_dir, exe_path
+            )
 
         # Make executable
         if not is_windows:

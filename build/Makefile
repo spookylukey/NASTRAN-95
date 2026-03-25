@@ -7,6 +7,7 @@
 FC      = gfortran
 FLAGS   = -std=legacy -fno-range-check -w -fallow-argument-mismatch \
           -fallow-invalid-boz -fno-automatic
+LFLAGS  = -static-libgfortran -static-libgcc
 
 SRC_DIRS = src_mis src_mds src_bd src_bin
 SOURCES  = $(foreach d,$(SRC_DIRS),$(wildcard $(d)/*.f)) stubs.f
@@ -22,7 +23,7 @@ VPATH = $(SRC_DIRS)
 all: nastrn
 
 nastrn: $(LINK_OBJS)
-	$(FC) $(FLAGS) -o $@ $^
+	$(FC) $(FLAGS) $(LFLAGS) -o $@ $^
 
 %.o: %.f
 	$(FC) -c $(FLAGS) -I. $< -o $@

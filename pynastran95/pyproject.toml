@@ -63,15 +63,17 @@ path = "hatch_build.py"
 [tool.cibuildwheel]
 build = ["cp312-manylinux_x86_64", "cp313-manylinux_x86_64", "cp312-win_amd64", "cp313-win_amd64"]
 test-requires = ["pytest"]
-test-command = "python -c \"import pynastran95; from pynastran95._data import get_executable; exe = get_executable(); assert exe is not None, 'bundled binary missing'; print(f'pynastran95 {pynastran95.__version__} - binary at {exe}')\""
+test-command = "python -c \"import subprocess, pynastran95; from pynastran95._data import get_executable; exe = get_executable(); assert exe is not None, 'bundled binary missing'; r = subprocess.run([str(exe)], capture_output=True, timeout=5); assert r.returncode != -11, f'nastrn segfaults (signal 11)'; print(f'pynastran95 {pynastran95.__version__} - binary at {exe} ok')\""
 
 [tool.cibuildwheel.linux]
 # Install gfortran + make, then compile nastrn once (before-all runs once per
-# container). The hatch build hook copies build/nastrn into each wheel instead
-# of recompiling per Python version.
+# container). The Makefile links with -static-libgfortran -static-libgcc so
+# the binary only depends on libc/libm (in the manylinux allowlist), avoiding
+# auditwheel needing to patch the ELF executable (which corrupts it).
 before-all = [
     "yum install -y gcc-gfortran make || apk add gfortran make || (apt-get update && apt-get install -y gfortran make)",
     "make -C build",
+    "ldd build/nastrn && ! ldd build/nastrn | grep -q libgfortran || { echo 'ERROR: nastrn still links libgfortran dynamically'; exit 1; }",
 ]
 repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel} || cp {wheel} {dest_dir}/"
 
