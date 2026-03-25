@@ -27,6 +27,7 @@ INCLUDE_DIR = BUILD_DIR  # For .COM files
 
 FORTRAN_DIR = Path(__file__).resolve().parent
 ENTRY_POINT = FORTRAN_DIR / "nastran_entry.f"
+IMPL_SOURCE = FORTRAN_DIR / "nastran_impl.f"
 EXIT_OVERRIDE = FORTRAN_DIR / "exit_override.f"
 OUTPUT_DIR = FORTRAN_DIR
 
@@ -51,11 +52,25 @@ def collect_sources() -> list[Path]:
     return sources
 
 
+def _newest_include_mtime(include_dir: Path) -> float:
+    """Return the newest mtime among .COM include files.
+
+    Many Fortran sources INCLUDE shared .COM files.  If a .COM file
+    changes (e.g. CHARACTER widths increased) every object must be
+    recompiled, so we track the newest .COM mtime as a dependency.
+    """
+    newest = 0.0
+    for com in include_dir.glob("*.COM"):
+        newest = max(newest, com.stat().st_mtime)
+    return newest
+
+
 def compile_objects(sources: list[Path], obj_dir: Path) -> list[Path]:
     """Compile Fortran sources to object files."""
     obj_dir.mkdir(parents=True, exist_ok=True)
     objects: list[Path] = []
     skip = {"nastrn.o", "chkfil.o"}  # Skip PROGRAM files
+    include_mtime = _newest_include_mtime(INCLUDE_DIR)
 
     for src in sources:
         obj_name = src.stem + ".o"
@@ -64,9 +79,11 @@ def compile_objects(sources: list[Path], obj_dir: Path) -> list[Path]:
         obj_path = obj_dir / obj_name
         objects.append(obj_path)
 
-        # Skip if object is newer than source
-        if obj_path.exists() and obj_path.stat().st_mtime > src.stat().st_mtime:
-            continue
+        # Skip if object is newer than source AND all include files
+        if obj_path.exists():
+            obj_mtime = obj_path.stat().st_mtime
+            if obj_mtime > src.stat().st_mtime and obj_mtime > include_mtime:
+                continue
 
         cmd = [
             "gfortran",
@@ -110,6 +127,28 @@ def build_f2py_extension(
         capture_output=True,
     )
 
+    # Compile the implementation file separately (not through f2py)
+    # to avoid f2py mis-declaring CHARACTER*4096 COMMON blocks.
+    impl_o = obj_dir / "nastran_impl.o" if obj_dir else OUTPUT_DIR / "nastran_impl.o"
+    subprocess.run(
+        [
+            "gfortran", "-c", *FLAGS,
+            f"-I{INCLUDE_DIR}",
+            str(IMPL_SOURCE),
+            "-o", str(impl_o),
+        ],
+        check=True,
+        capture_output=True,
+    )
+
+    # Create a static archive containing all NASTRAN objects plus our
+    # separately-compiled impl and exit_override.  The meson backend
+    # used by f2py ignores extra .o files on the command line, so we
+    # link them as a library instead.
+    archive_path = FORTRAN_DIR / "libnastran.a"
+    all_objs = list(objects) + [exit_o, impl_o]
+    create_archive(all_objs, archive_path)
+
     # Build with f2py, passing all object files directly instead of archive
     cmd = [
         python,
@@ -123,9 +162,12 @@ def build_f2py_extension(
         "--f77flags=" + " ".join(FLAGS),
         "--build-dir",
         str(OUTPUT_DIR / "_f2py_build"),
+        f"-L{FORTRAN_DIR}",
+        "-lnastran",
     ]
-    # Add all object files, including the C exit override
+    # Also pass object files for non-meson backends that support them
     cmd.append(str(exit_o))
+    cmd.append(str(impl_o))
     cmd.extend(str(o) for o in objects)
 
     print(f"  Building f2py module {module_name} with {len(objects)} objects...")
