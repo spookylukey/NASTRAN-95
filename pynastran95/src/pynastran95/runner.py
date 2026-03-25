@@ -23,6 +23,16 @@ from pynastran95.parser import (
 # Default paths: prefer bundled data, fall back to repo layout for dev
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
+# Maximum path length that the NASTRAN Fortran code can handle.
+# All CHARACTER variables for file paths are declared as CHARACTER*4096.
+_FORTRAN_PATH_MAX = 4096
+
+# Longest filename suffix appended to directory paths internally by NASTRAN.
+# Scratch files: DIRCTY + "/SCR99.ZAP" (11 chars)
+# RFDIR files:   RFDIR + "/NASINFO" (8 chars)
+# Env file paths are used as-is, so the full path must fit.
+_MAX_DIR_SUFFIX_LEN = 12  # conservative headroom for "/" + filename
+
 
 def _default_executable() -> Path:
     """Find the nastrn executable (bundled or repo)."""
@@ -42,6 +52,51 @@ def _default_rfdir() -> Path:
     if bundled is not None:
         return bundled
     return _REPO_ROOT / "rf_clean"
+
+
+class NastranPathTooLongError(ValueError):
+    """Raised when a file path exceeds NASTRAN's internal limit."""
+
+
+def _check_path_length(path: str, label: str, max_len: int = _FORTRAN_PATH_MAX) -> None:
+    """Raise NastranPathTooLongError if path exceeds the Fortran limit."""
+    if len(path) > max_len:
+        raise NastranPathTooLongError(
+            f"{label} path is too long for NASTRAN "
+            f"({len(path)} characters, max {max_len}).\n"
+            f"  Path: {path}\n"
+            f"Use a shorter directory path (e.g. via scratch_root or a symlink)."
+        )
+
+
+def _validate_env_paths(env: dict[str, str]) -> None:
+    """Validate that all path-valued environment variables fit in NASTRAN's buffers.
+
+    NASTRAN reads these via GETENV into CHARACTER*4096 variables. Paths that
+    are directories also have filenames appended internally (up to ~12 chars),
+    so we check those with reduced headroom.
+    """
+    # Directory paths: NASTRAN appends filenames to these internally
+    dir_keys = {"RFDIR", "DIRCTY"}
+    # File paths: used as-is, full 4096 chars available
+    file_keys = {
+        "LOGNM", "NPTPNM", "DICTNM", "PLTNM", "PUNCHNM", "OPTPNM",
+    }
+    # FTN and SOF paths
+    for key in env:
+        if key.startswith("FTN") or key.startswith("SOF"):
+            file_keys.add(key)
+
+    for key in dir_keys:
+        value = env.get(key, "")
+        if value and value != "none":
+            max_len = _FORTRAN_PATH_MAX - _MAX_DIR_SUFFIX_LEN
+            _check_path_length(value, f"{key} (directory)", max_len)
+
+    for key in file_keys:
+        value = env.get(key, "")
+        if value and value != "none":
+            _check_path_length(value, key)
 
 
 class NastranRunner:
@@ -156,6 +211,7 @@ class NastranRunner:
             env[f"SOF{i}"] = "none"
         for i in range(11, 24):
             env[f"FTN{i}"] = str(scratch_dir / f"ftn{i}")
+        _validate_env_paths(env)
         return env
 
     def _parse_results(self, output: str) -> NastranResult:

@@ -31,7 +31,7 @@ C
       CHARACTER*(*) OUTPUTF
       INTEGER IRETURN
 C
-      CHARACTER*80    VALUE
+      CHARACTER*4096  VALUE
       CHARACTER*5     TMP
       INTEGER         SPERLK
       REAL            SYSTM(94)
@@ -46,7 +46,7 @@ C
      &,                 MAXBLK, MAXDSK, IDBLEN, IDBADR, IBASBF, INDDIR
      &,                 NUMOPN, NUMCLS, NUMWRI, NUMREA, LENOPC
       INCLUDE 'NASNAMES.COM'
-      CHARACTER*80    SDSN
+      CHARACTER*4096  SDSN
       EQUIVALENCE    ( ISYSTM, SYSTM )
 C
       IRETURN = 0

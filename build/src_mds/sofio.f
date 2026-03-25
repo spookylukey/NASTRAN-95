@@ -6,8 +6,8 @@
         COMMON / SYSTEM / ISYSBF, IWR                                           
         common / sofdsn / sofdsn(10)                                            
         CHARACTER*4       FILNAM                                                
-        CHARACTER*80      DSNAME                                                
-        character*80      sofdsn                                                
+        CHARACTER*4096    DSNAME                                                
+        character*4096    sofdsn                                                
         INTEGER           FILSIZ, HIBLK, BUF(10)                                
         IF ( LENSOF( 1 ) .NE. 0 ) GO TO 20                                      
         NUMBLK = 1                                                              
@@ -39,7 +39,7 @@
 9915    FORMAT( //,' THE FOLLOWING SOF FILES WERE AVAILABLE',//)                
         DO 60 K = 1, NFILES                                                     
         WRITE( IWR, 9920 ) sofdsn( K ), FILSIZ( K ), LENSOF( K )                
-9920    FORMAT(' FILE ',A72' HAS ',I10, ' BLOCKS - BLOCKS USED ',I10)           
+9920    FORMAT(' FILE ',A,' HAS ',I10, ' BLOCKS - BLOCKS USED ',I10)           
 60      CONTINUE                                                                
         CALL MESAGE (-61, 0, 0)                                                 
 100     IF ( LASFIL .EQ. IFILE ) GO TO 120                                      

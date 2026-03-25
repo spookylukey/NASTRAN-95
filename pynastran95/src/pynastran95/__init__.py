@@ -6,12 +6,13 @@ from pynastran95.models import (
     NastranResult,
     StressResult,
 )
-from pynastran95.runner import NastranRunner, run
+from pynastran95.runner import NastranPathTooLongError, NastranRunner, run
 
 __all__ = [
     "DisplacementResult",
     "EigenvalueResult",
     "NastranResult",
+    "NastranPathTooLongError",
     "NastranRunner",
     "StressResult",
     "run",

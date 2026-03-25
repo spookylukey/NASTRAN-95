@@ -69,3 +69,80 @@ class TestNastranRunner:
 
         result = run(input_file, timeout=120.0)
         assert result.completed
+
+
+class TestPathLengthValidation:
+    """Tests for NASTRAN file path length validation."""
+
+    def test_long_scratch_dir_raises(self) -> None:
+        """Scratch directory paths that exceed the Fortran limit are rejected."""
+        from pynastran95.runner import NastranPathTooLongError, _FORTRAN_PATH_MAX, _validate_env_paths
+
+        long_dir = "/tmp/" + "a" * _FORTRAN_PATH_MAX
+        env = {
+            "DIRCTY": long_dir,
+            "LOGNM": long_dir + "/run.log",
+        }
+        with pytest.raises(NastranPathTooLongError, match="too long for NASTRAN"):
+            _validate_env_paths(env)
+
+    def test_long_rfdir_raises(self) -> None:
+        """RFDIR paths that exceed the Fortran limit are rejected."""
+        from pynastran95.runner import NastranPathTooLongError, _FORTRAN_PATH_MAX, _validate_env_paths
+
+        long_dir = "/opt/" + "r" * _FORTRAN_PATH_MAX
+        env = {"RFDIR": long_dir}
+        with pytest.raises(NastranPathTooLongError, match="too long for NASTRAN"):
+            _validate_env_paths(env)
+
+    def test_normal_paths_ok(self) -> None:
+        """Normal-length paths pass validation without error."""
+        from pynastran95.runner import _validate_env_paths
+
+        env = {
+            "RFDIR": "/home/user/nastran/rf",
+            "DIRCTY": "/tmp/nastran_abc123",
+            "LOGNM": "/tmp/nastran_abc123/run.log",
+            "NPTPNM": "/tmp/nastran_abc123/run.nptp",
+            "DICTNM": "/tmp/nastran_abc123/run.dic",
+            "PLTNM": "/tmp/nastran_abc123/plot.dat",
+            "PUNCHNM": "/tmp/nastran_abc123/punch.dat",
+            "OPTPNM": "none",
+            "FTN11": "/tmp/nastran_abc123/ftn11",
+            "SOF1": "none",
+        }
+        # Should not raise
+        _validate_env_paths(env)
+
+    def test_max_length_boundary(self) -> None:
+        """Paths exactly at the limit pass; one char over fails."""
+        from pynastran95.runner import (
+            NastranPathTooLongError,
+            _FORTRAN_PATH_MAX,
+            _MAX_DIR_SUFFIX_LEN,
+            _validate_env_paths,
+        )
+
+        max_dir_len = _FORTRAN_PATH_MAX - _MAX_DIR_SUFFIX_LEN
+
+        # Exactly at limit: should pass
+        env_ok = {
+            "RFDIR": "/" + "x" * (max_dir_len - 1),
+            "DIRCTY": "/" + "y" * (max_dir_len - 1),
+            "LOGNM": "/" + "z" * (_FORTRAN_PATH_MAX - 1),
+        }
+        _validate_env_paths(env_ok)  # no error
+
+        # One over limit for directory: should fail
+        env_bad = {
+            "DIRCTY": "/" + "y" * max_dir_len,
+        }
+        with pytest.raises(NastranPathTooLongError):
+            _validate_env_paths(env_bad)
+
+        # One over limit for file path: should fail
+        env_bad2 = {
+            "LOGNM": "/" + "z" * _FORTRAN_PATH_MAX,
+        }
+        with pytest.raises(NastranPathTooLongError):
+            _validate_env_paths(env_bad2)

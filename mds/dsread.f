@@ -13,14 +13,14 @@ c      PRINT *,' DSREAD,LEN,IREC,IUNIT=',LEN,IREC,IUNIT
       CALL MESAGE ( -61, 0, 0 )                                                 
 701   WRITE ( IWR, 901 ) IUNIT, IREC, MDSNAM( IUNIT )                           
 901   FORMAT(//' ERROR IN DSREAD-BAD REC NO., UNIT=',I4,' REC=',I4              
-     &,      /,' FILE NAME=',A72)                                               
+     &,      /,' FILE NAME=',A)                                               
       ICCERR = 0                                                                
       CALL DSMSG  ( 101 )                                                       
       CALL MESAGE ( -61, 0, 0 )                                                 
       GO TO 777                                                                 
 702   WRITE( IWR, 902 ) IUNIT, IREC, ISTAT, MDSNAM( IUNIT )                     
 902   FORMAT(//', ERROR ENCOUNTERED IN DSREAD, UNIT=',I5,' RECORD='             
-     &, I5,' STATUS=',I9,/' DSNAME=',A72 )                                      
+     &, I5,' STATUS=',I9,/' DSNAME=',A )                                      
       ICCERR = ISTAT                                                            
       CALL DSMSG( 101 )                                                         
       CALL MESAGE( -61, 0, 0 )                                                  
