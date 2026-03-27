@@ -1,7 +1,16 @@
 # NASTRAN-95
 
-NASTRAN has been released under the
-[NASA Open Source Agreement version 1.3](https://github.com/nasa/NASTRAN-95/raw/master/NASA%20Open%20Source%20Agreement-NASTRAN%2095.doc).
+This repo was forked from https://github.com/nasa/NASTRAN-95
+
+Changes to the Fortran sources are outlined in this README.
+
+The Python wrapper module, along with its README and docs are found in
+`python/`, with configuration in `pyproject.toml`.
+
+----
+
+NASTRAN has been released under the [NASA Open Source Agreement version
+1.3](https://github.com/nasa/NASTRAN-95/raw/master/NASA%20Open%20Source%20Agreement-NASTRAN%2095.doc).
 
 NASTRAN is the NASA Structural Analysis System, a finite element analysis
 program (FEA) completed in the early 1970's. It was the first of its kind and
