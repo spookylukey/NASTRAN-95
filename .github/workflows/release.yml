@@ -28,7 +28,7 @@ jobs:
           python -m cibuildwheel \
             --config-file pyproject.toml \
             --output-dir wheelhouse \
-            nastran95
+            .
         env:
           CIBW_BUILD: "cp312-manylinux_x86_64 cp313-manylinux_x86_64"
 
@@ -61,7 +61,7 @@ jobs:
           python -m cibuildwheel `
             --config-file pyproject.toml `
             --output-dir wheelhouse `
-            nastran95
+            .
         env:
           CIBW_BUILD: "cp312-win_amd64 cp313-win_amd64"
           # Use MSYS2 gfortran + make on PATH
@@ -88,7 +88,7 @@ jobs:
       - name: Build sdist
         run: |
           pip install build
-          python -m build python --sdist --outdir sdist/
+          python -m build . --sdist --outdir sdist/
 
       - uses: actions/upload-artifact@v4
         with:
