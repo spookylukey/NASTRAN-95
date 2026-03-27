@@ -121,7 +121,7 @@ for i in range(11):
 
 # Elements
 for i in range(10):
-    model.add_cbar(i + 1, 1, [i + 1, i + 2], [0.0, 0.0, 1.0])
+    model.add_cbar(i + 1, 1, [i + 1, i + 2], x=[0.0, 0.0, 1.0], g0=None)
 
 # Boundary conditions
 model.add_spc1(1, '123456', [1])
@@ -131,6 +131,7 @@ model.add_force(1, 11, 1.0, [0.0, 0.0, 1000.0])
 
 # Executive control (NASTRAN-95 format)
 model.executive_control_lines = [
+    'ID    CANTILEVER,PYNASTRAN',
     'SOL 1,1',
     'APP DISPLACEMENT',
     'TIME 10',
@@ -138,14 +139,15 @@ model.executive_control_lines = [
 ]
 
 # Case control
-case = model.create_subcases(0)
+subcases = model.create_subcases(0)
+case = subcases[0]
 case.add_integer_type('SPC', 1)
 case.add_integer_type('LOAD', 1)
-case.add_result_type('DISPLACEMENT', 'ALL')
+case.add_result_type('DISPLACEMENT', 'ALL', [])
 
 # Write to string and run
 buf = StringIO()
-model.write_bdf(buf)
+model.write_bdf(buf, enddata=True, close=False)
 result = nastran95.run(buf.getvalue())
 
 if result.completed:
