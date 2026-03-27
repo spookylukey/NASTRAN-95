@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from pynastran95.parser import (
+from nastran95.parser import (
     is_completed,
     parse_displacements,
     parse_eigenvalues,

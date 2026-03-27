@@ -20,10 +20,10 @@ test/*.nptp
 test/*.inp
 test/fort.*
 
-# pynastran95 build artifacts
-pynastran95/src/pynastran95/_data/bin/
-pynastran95/src/pynastran95/_data/rf/
-pynastran95/src/pynastran95/_fortran/_obj/
-pynastran95/src/pynastran95/_fortran/_f2py_build/
-pynastran95/src/pynastran95/_fortran/_nastran_core*.so
-pynastran95/src/pynastran95/_fortran/libnastran.a
+# build artifacts
+python/src/nastran95/_data/bin/
+python/src/nastran95/_data/rf/
+python/src/nastran95/_fortran/_obj/
+python/src/nastran95/_fortran/_f2py_build/
+python/src/nastran95/_fortran/_nastran_core*.so
+python/src/nastran95/_fortran/libnastran.a

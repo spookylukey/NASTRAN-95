@@ -10,8 +10,8 @@ import time
 from pathlib import Path
 from typing import Literal
 
-from pynastran95.models import NastranResult
-from pynastran95.parser import (
+from nastran95.models import NastranResult
+from nastran95.parser import (
     is_completed,
     parse_displacements,
     parse_eigenvalues,
@@ -36,7 +36,7 @@ _MAX_DIR_SUFFIX_LEN = 12  # conservative headroom for "/" + filename
 
 def _default_executable() -> Path:
     """Find the nastrn executable (bundled or repo)."""
-    from pynastran95._data import get_executable
+    from nastran95._data import get_executable
 
     bundled = get_executable()
     if bundled is not None:
@@ -46,7 +46,7 @@ def _default_executable() -> Path:
 
 def _default_rfdir() -> Path:
     """Find the rigid format directory (bundled or repo)."""
-    from pynastran95._data import get_rfdir
+    from nastran95._data import get_rfdir
 
     bundled = get_rfdir()
     if bundled is not None:
@@ -138,10 +138,10 @@ class NastranRunner:
                 msg = f"NASTRAN executable not found: {self.executable}"
                 raise FileNotFoundError(msg)
         elif mode == "f2py":
-            from pynastran95._fortran import is_built
+            from nastran95._fortran import is_built
 
             if not is_built():
-                msg = "f2py extension not built. Run: python -m pynastran95._fortran.build_ext"
+                msg = "f2py extension not built. Run: python -m nastran95._fortran.build_ext"
                 raise RuntimeError(msg)
             self.executable = None  # type: ignore[assignment]
         else:
@@ -283,7 +283,7 @@ class NastranRunner:
         timeout: float | None,
     ) -> NastranResult:
         """Execute NASTRAN via the f2py extension (forked child process)."""
-        from pynastran95._fortran import get_core
+        from nastran95._fortran import get_core
 
         # Set environment variables (f2py reads them via getenv)
         env = self._setup_env(scratch_dir)

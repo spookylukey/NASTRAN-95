@@ -61,7 +61,7 @@ class TestNastranRunner:
     @pytest.mark.slow
     def test_run_convenience_function(self) -> None:
         """Test the module-level run() convenience function."""
-        from pynastran95 import run
+        from nastran95 import run
 
         input_file = INP_CLEAN_DIR / "d01011a.inp"
         if not input_file.exists():
@@ -76,7 +76,7 @@ class TestPathLengthValidation:
 
     def test_long_scratch_dir_raises(self) -> None:
         """Scratch directory paths that exceed the Fortran limit are rejected."""
-        from pynastran95.runner import NastranPathTooLongError, _FORTRAN_PATH_MAX, _validate_env_paths
+        from nastran95.runner import NastranPathTooLongError, _FORTRAN_PATH_MAX, _validate_env_paths
 
         long_dir = "/tmp/" + "a" * _FORTRAN_PATH_MAX
         env = {
@@ -88,7 +88,7 @@ class TestPathLengthValidation:
 
     def test_long_rfdir_raises(self) -> None:
         """RFDIR paths that exceed the Fortran limit are rejected."""
-        from pynastran95.runner import NastranPathTooLongError, _FORTRAN_PATH_MAX, _validate_env_paths
+        from nastran95.runner import NastranPathTooLongError, _FORTRAN_PATH_MAX, _validate_env_paths
 
         long_dir = "/opt/" + "r" * _FORTRAN_PATH_MAX
         env = {"RFDIR": long_dir}
@@ -97,7 +97,7 @@ class TestPathLengthValidation:
 
     def test_normal_paths_ok(self) -> None:
         """Normal-length paths pass validation without error."""
-        from pynastran95.runner import _validate_env_paths
+        from nastran95.runner import _validate_env_paths
 
         env = {
             "RFDIR": "/home/user/nastran/rf",
@@ -116,7 +116,7 @@ class TestPathLengthValidation:
 
     def test_max_length_boundary(self) -> None:
         """Paths exactly at the limit pass; one char over fails."""
-        from pynastran95.runner import (
+        from nastran95.runner import (
             NastranPathTooLongError,
             _FORTRAN_PATH_MAX,
             _MAX_DIR_SUFFIX_LEN,

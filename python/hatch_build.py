@@ -33,7 +33,7 @@ class NastranBuildHook(BuildHookInterface):
         """Compile nastrn and bundle data files into the package."""
         # Resolve paths
         root = Path(self.root)
-        # The NASTRAN repo root is one level up from pynastran95/
+        # The NASTRAN repo root is one level up from nastran95/
         repo_root = root.parent
         build_dir = repo_root / "build"
         src_mis = build_dir / "src_mis"
@@ -50,7 +50,7 @@ class NastranBuildHook(BuildHookInterface):
             return
 
         # Target directories inside the package
-        pkg_data = root / "src" / "pynastran95" / "_data"
+        pkg_data = root / "src" / "nastran95" / "_data"
         pkg_bin = pkg_data / "bin"
         pkg_rf = pkg_data / "rf"
         pkg_bin.mkdir(parents=True, exist_ok=True)
@@ -91,8 +91,8 @@ class NastranBuildHook(BuildHookInterface):
         # Tell hatch to include bin/ and rf/ subdirectories
         # (_data/__init__.py is already picked up by package discovery)
         build_data["force_include"] = {
-            str(pkg_bin): "pynastran95/_data/bin",
-            str(pkg_rf): "pynastran95/_data/rf",
+            str(pkg_bin): "nastran95/_data/bin",
+            str(pkg_rf): "nastran95/_data/rf",
         }
 
         # Mark wheel as platform-specific (contains native binary)

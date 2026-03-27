@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+
+# f2py build artifacts
+src/nastran95/_fortran/_obj/
+src/nastran95/_fortran/_f2py_build/
+src/nastran95/_fortran/_nastran_core*.so
+src/nastran95/_fortran/_nastran_coremodule.c
+src/nastran95/_fortran/_nastran_core-f2pywrappers.f
+src/nastran95/_fortran/libnastran.a
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Build hook generated data
+src/nastran95/_data/bin/
+src/nastran95/_data/rf/
+
+# Wheel output
+wheelhouse/
+
+# Testing
+.pytest_cache/
+
+# UV
+uv.lock

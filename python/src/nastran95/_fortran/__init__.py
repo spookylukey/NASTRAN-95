@@ -3,7 +3,7 @@
 This module provides direct access to the NASTRAN-95 solver via f2py.
 The extension must be built first using:
 
-    python -m pynastran95._fortran.build_ext
+    python -m nastran95._fortran.build_ext
 
 Once built, the _nastran_core module provides:
     - nastran_solve(input_file, output_file) -> return_code

@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from pynastran95 import run
+from nastran95 import run
 
 
 def _build_cantilever_bdf() -> str:
@@ -82,7 +82,7 @@ def _build_cantilever_manual() -> str:
     lines = []
 
     # Executive control
-    lines.append("ID    CANTILEVER,PYNASTRAN95")
+    lines.append("ID    CANTILEVER,NASTRAN95")
     lines.append("APP   DISPLACEMENT")
     lines.append("SOL   1,1")
     lines.append("TIME  10")
@@ -159,7 +159,7 @@ class TestPyNastranIntegration:
     @pytest.mark.slow
     def test_cantilever_f2py(self) -> None:
         """Run the same cantilever test via f2py."""
-        from pynastran95._fortran import is_built
+        from nastran95._fortran import is_built
 
         if not is_built():
             pytest.skip("f2py extension not built")

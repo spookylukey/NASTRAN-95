@@ -1,8 +1,8 @@
 # API Reference
 
-## Module: pynastran95
+## Module: nastran95
 
-### `pynastran95.run(input_data, *, timeout=300.0, mode="subprocess", **kwargs)`
+### `nastran95.run(input_data, *, timeout=300.0, mode="subprocess", **kwargs)`
 
 Convenience function to run a NASTRAN analysis.
 
@@ -14,7 +14,7 @@ Convenience function to run a NASTRAN analysis.
 
 **Returns:** `NastranResult`
 
-### `pynastran95.NastranRunner`
+### `nastran95.NastranRunner`
 
 ```python
 class NastranRunner(
@@ -40,7 +40,7 @@ NASTRAN-95 analysis runner. Create once and reuse for multiple runs.
 
 ## Data Models
 
-### `pynastran95.NastranResult`
+### `nastran95.NastranResult`
 
 ```python
 @dataclass
@@ -55,7 +55,7 @@ class NastranResult:
     wall_time: float = 0.0
 ```
 
-### `pynastran95.DisplacementResult`
+### `nastran95.DisplacementResult`
 
 ```python
 @dataclass
@@ -66,7 +66,7 @@ class DisplacementResult:
     subcase: int = 1
 ```
 
-### `pynastran95.EigenvalueResult`
+### `nastran95.EigenvalueResult`
 
 ```python
 @dataclass
@@ -78,7 +78,7 @@ class EigenvalueResult:
     generalized_stiffness: NDArray[np.float64]
 ```
 
-### `pynastran95.StressResult`
+### `nastran95.StressResult`
 
 ```python
 @dataclass
@@ -103,17 +103,17 @@ Stress component keys by element type:
 ### Building
 
 ```bash
-python -m pynastran95._fortran.build_ext
+python -m nastran95._fortran.build_ext
 ```
 
 This compiles all NASTRAN Fortran sources and builds a Python C extension
 module. Takes about 60 seconds.
 
-### `pynastran95._fortran.is_built()`
+### `nastran95._fortran.is_built()`
 
 Returns `True` if the f2py extension has been built.
 
-### `pynastran95._fortran.get_core()`
+### `nastran95._fortran.get_core()`
 
 Returns the `_nastran_core` extension module with:
 - `nastran_solve(inputf, outputf)` → `ireturn` (int)
@@ -124,7 +124,7 @@ Returns the `_nastran_core` extension module with:
 Low-level functions for parsing NASTRAN output text:
 
 ```python
-from pynastran95.parser import (
+from nastran95.parser import (
     parse_displacements,    # → list[DisplacementResult]
     parse_eigenvalues,      # → EigenvalueResult | None
     parse_rod_stresses,     # → list[StressResult]

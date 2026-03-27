@@ -26,9 +26,9 @@ jobs:
       - name: Build wheels
         run: |
           python -m cibuildwheel \
-            --config-file pynastran95/pyproject.toml \
+            --config-file python/pyproject.toml \
             --output-dir wheelhouse \
-            pynastran95
+            nastran95
         env:
           CIBW_BUILD: "cp312-manylinux_x86_64 cp313-manylinux_x86_64"
 
@@ -59,9 +59,9 @@ jobs:
       - name: Build wheels
         run: |
           python -m cibuildwheel `
-            --config-file pynastran95/pyproject.toml `
+            --config-file python/pyproject.toml `
             --output-dir wheelhouse `
-            pynastran95
+            nastran95
         env:
           CIBW_BUILD: "cp312-win_amd64 cp313-win_amd64"
           # Use MSYS2 gfortran + make on PATH
@@ -88,7 +88,7 @@ jobs:
       - name: Build sdist
         run: |
           pip install build
-          python -m build pynastran95 --sdist --outdir sdist/
+          python -m build python --sdist --outdir sdist/
 
       - uses: actions/upload-artifact@v4
         with:
@@ -102,7 +102,7 @@ jobs:
     if: github.event.inputs.publish == 'true'
     environment:
       name: pypi
-      url: https://pypi.org/p/pynastran95
+      url: https://pypi.org/p/nastran95
     permissions:
       id-token: write  # Required for trusted publishing
     steps:

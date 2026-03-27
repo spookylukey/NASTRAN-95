@@ -1,12 +1,12 @@
-"""pynastran95 - Python wrapper for NASTRAN-95 finite element analysis."""
+"""nastran95 - NASTRAN-95 finite element analysis executable with Python wrapper."""
 
-from pynastran95.models import (
+from nastran95.models import (
     DisplacementResult,
     EigenvalueResult,
     NastranResult,
     StressResult,
 )
-from pynastran95.runner import NastranPathTooLongError, NastranRunner, run
+from nastran95.runner import NastranPathTooLongError, NastranRunner, run
 
 __all__ = [
     "DisplacementResult",
@@ -17,5 +17,3 @@ __all__ = [
     "StressResult",
     "run",
 ]
-
-__version__ = "0.1.0"

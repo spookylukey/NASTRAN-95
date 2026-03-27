@@ -1,19 +1,21 @@
-# Getting Started with pynastran95
+# Getting Started with nastran95
 
-pynastran95 is a Python wrapper for **NASTRAN-95**, the original NASA Structural
+nastran95 is a Python wrapper for **NASTRAN-95**, the original NASA Structural
 Analysis System. It lets you run finite element analyses directly from Python
 and access results as NumPy arrays.
 
 ## Prerequisites
 
 - Python 3.11+
-- gfortran (for building the Fortran extension)
-- A built NASTRAN-95 binary (see the main repo README)
+- If building from source
+  - gfortran (for building the Fortran extension)
+  - A built NASTRAN-95 binary (see the main repo README)
+- O
 
 ## Installation
 
 ```bash
-cd pynastran95
+cd python
 uv venv
 uv pip install -e ".[dev]"
 ```
@@ -28,13 +30,13 @@ uv pip install pyNastran
 
 ### Running an Existing Input Deck
 
-The simplest way to use pynastran95 is to run an existing NASTRAN input file:
+The simplest way to use nastran95 is to run an existing NASTRAN input file:
 
 ```python
-import pynastran95
+import nastran95
 
 # Run a demo problem
-result = pynastran95.run("inp_clean/d01011a.inp")
+result = nastran95.run("inp_clean/d01011a.inp")
 
 # Check if it completed successfully
 print(f"Completed: {result.completed}")
@@ -56,7 +58,7 @@ if result.eigenvalues is not None:
 You can pass a NASTRAN input deck as a string:
 
 ```python
-import pynastran95
+import nastran95
 import numpy as np
 
 # A simple cantilever beam
@@ -91,7 +93,7 @@ FORCE   1       6       0       1000.0  0.0     0.0     1.0
 ENDDATA
 """
 
-result = pynastran95.run(deck)
+result = nastran95.run(deck)
 
 if result.completed:
     disp = result.displacements[0]
@@ -107,7 +109,7 @@ pyNastran provides a Python API for building BDF models. Here's an example:
 ```python
 from io import StringIO
 from pyNastran.bdf.bdf import BDF
-import pynastran95
+import nastran95
 import numpy as np
 
 # Build model
@@ -150,7 +152,7 @@ case.add_result_type('DISPLACEMENT', 'ALL')
 # Write to string and run
 buf = StringIO()
 model.write_bdf(buf)
-result = pynastran95.run(buf.getvalue())
+result = nastran95.run(buf.getvalue())
 
 if result.completed:
     disp = result.displacements[0]
@@ -160,7 +162,7 @@ if result.completed:
 
 ## Execution Modes
 
-pynastran95 supports two execution modes:
+nastran95 supports two execution modes:
 
 ### Subprocess Mode (default)
 
@@ -169,7 +171,7 @@ mode and requires no additional build steps beyond compiling the Fortran
 binary.
 
 ```python
-result = pynastran95.run(deck, mode="subprocess")
+result = nastran95.run(deck, mode="subprocess")
 ```
 
 ### f2py Mode
@@ -178,19 +180,19 @@ Calls the Fortran solver directly via a Python C extension built with f2py.
 Requires building the extension first:
 
 ```bash
-python -m pynastran95._fortran.build_ext
+python -m nastran95._fortran.build_ext
 ```
 
 Then:
 
 ```python
-result = pynastran95.run(deck, mode="f2py")
+result = nastran95.run(deck, mode="f2py")
 ```
 
 The f2py mode also exposes NASTRAN's internal COMMON blocks:
 
 ```python
-from pynastran95._fortran import get_core
+from nastran95._fortran import get_core
 core = get_core()
 
 # Access the SYSTEM common block
@@ -276,12 +278,12 @@ See the `inp_clean/` directory for 132 working demo problems.
 2. **Memory**: The default `DBMEM=12000000` and `OCMEM=2000000` (words)
    work for most problems. Increase for large models:
    ```python
-   runner = pynastran95.NastranRunner(dbmem=24_000_000, ocmem=4_000_000)
+   runner = nastran95.NastranRunner(dbmem=24_000_000, ocmem=4_000_000)
    ```
 
 3. **Timeout**: Long-running analyses may need a longer timeout:
    ```python
-   result = pynastran95.run(deck, timeout=600.0)  # 10 minutes
+   result = nastran95.run(deck, timeout=600.0)  # 10 minutes
    ```
 
 4. **Full output**: The complete F06-style output is in `result.output`.

@@ -5,7 +5,7 @@ subroutine using f2py. The result is a shared library that can be imported
 directly in Python.
 
 Usage:
-    python -m pynastran95._fortran.build_ext
+    python -m nastran95._fortran.build_ext
 """
 
 from __future__ import annotations

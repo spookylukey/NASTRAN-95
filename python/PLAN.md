@@ -1,4 +1,4 @@
-# pynastran95 - Python Wrapper for NASTRAN-95
+# nastran95 - Python Wrapper for NASTRAN-95
 
 ## Implementation Status
 

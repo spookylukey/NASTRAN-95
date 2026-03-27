@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-# Paths relative to the pynastran95 project
+# Paths relative to the nastran95 project
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 INP_CLEAN_DIR = REPO_ROOT / "inp_clean"
 DEMOOUT_DIR = REPO_ROOT / "demoout"
@@ -17,7 +17,7 @@ RF_CLEAN_DIR = REPO_ROOT / "rf_clean"
 @pytest.fixture
 def nastran_runner():
     """Create a NastranRunner with default settings."""
-    from pynastran95.runner import NastranRunner
+    from nastran95.runner import NastranRunner
 
     executable = BUILD_DIR / "nastrn"
     if not executable.exists():

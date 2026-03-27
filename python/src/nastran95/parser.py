@@ -6,7 +6,7 @@ import re
 
 import numpy as np
 
-from pynastran95.models import DisplacementResult, EigenvalueResult, StressResult
+from nastran95.models import DisplacementResult, EigenvalueResult, StressResult
 
 # Fortran carriage control: column 1 is a control character, not data.
 # '1' = new page, '0' = double space, ' ' = single space, '+' = overprint
