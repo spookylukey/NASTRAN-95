@@ -72,7 +72,7 @@ path = "hatch_build.py"
 [tool.cibuildwheel]
 build = ["cp312-manylinux_x86_64", "cp313-manylinux_x86_64", "cp312-win_amd64", "cp313-win_amd64"]
 test-requires = ["pytest"]
-test-command = "python -c \"import subprocess, nastran95; from nastran95._data import get_executable; exe = get_executable(); assert exe is not None, 'bundled binary missing'; r = subprocess.run([str(exe)], capture_output=True, timeout=5); assert r.returncode != -11, f'nastrn segfaults (signal 11)'; print(f'nastran95 - binary at {exe} ok')\""
+test-command = "python -c \"import subprocess, sys, nastran95; from nastran95._data import get_executable; exe = get_executable(); assert exe is not None, 'bundled binary missing'; r = subprocess.run([str(exe)], capture_output=True, timeout=5); assert r.returncode != -11, f'nastrn segfaults (signal 11)'; assert r.returncode != 3221225781, f'nastrn cannot find DLLs (0xC0000135) - not statically linked'; print(f'nastran95 - binary at {exe}, rc={r.returncode} ok')\""
 
 [tool.cibuildwheel.linux]
 # Install gfortran + make, then compile nastrn once (before-all runs once per
