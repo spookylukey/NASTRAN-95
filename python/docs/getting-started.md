@@ -4,21 +4,15 @@ nastran95 is a Python wrapper for **NASTRAN-95**, the original NASA Structural
 Analysis System. It lets you run finite element analyses directly from Python
 and access results as NumPy arrays.
 
-## Prerequisites
-
-- Python 3.11+
-- If building from source
-  - gfortran (for building the Fortran extension)
-  - A built NASTRAN-95 binary (see the main repo README)
-- O
 
 ## Installation
 
 ```bash
-cd python
-uv venv
-uv pip install -e ".[dev]"
+pip install nastran95
 ```
+
+Assuming wheels are available for your system, this package includes the
+`nastrn` executable. See the README for other installation methods
 
 Optionally, install pyNastran for BDF model building:
 

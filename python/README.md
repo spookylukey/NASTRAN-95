@@ -36,12 +36,12 @@ Install both the Fortran executable and the Python wrapper using pre-built wheel
 pip install nastran95
 ```
 
-Or, if the wheels are available for your system, build from source
-
+Or, if the wheels are not available for your system, build from source (below).
 
 ## Building
 
 First, build the NASTRAN-95 Fortran binary in the parent directory (requires gfortran):
+
 
 ```bash
 cd build

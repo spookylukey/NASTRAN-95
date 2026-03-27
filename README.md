@@ -4,8 +4,8 @@ This repo was forked from https://github.com/nasa/NASTRAN-95
 
 Changes to the Fortran sources are outlined in this README.
 
-The Python wrapper module, along with its README and docs are found in
-`python/`, with configuration in `pyproject.toml`.
+The Python wrapper module are found in `python/`, with configuration in
+`pyproject.toml`. See [python/README.md](python/README.md) for more.
 
 ----
 
