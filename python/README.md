@@ -41,7 +41,7 @@ Or, if the wheels are available for your system, build from source
 
 ## Building
 
-First, build the NASTRAN-95 Fortran binary (requires gfortran):
+First, build the NASTRAN-95 Fortran binary in the parent directory (requires gfortran):
 
 ```bash
 cd build
@@ -52,15 +52,14 @@ cd ..
 Then install the Python package:
 
 ```bash
-cd nastran95
-uv venv
-uv pip install -e ".[dev]"
+uv sync
 ```
 
 Optionally, build the f2py extension for in-process execution:
 
 ```bash
-.venv/bin/python -m nastran95._fortran.build_ext
+cd python
+uv run python -m nastran95._fortran.build_ext
 ```
 
 ## Testing
@@ -73,7 +72,7 @@ Optionally, build the f2py extension for in-process execution:
 
 ```
 python/
-├── src/nastran95/
+├── nastran95/
 │   ├── __init__.py          # Public API
 │   ├── runner.py            # Subprocess & f2py runners
 │   ├── parser.py            # F06 output parser

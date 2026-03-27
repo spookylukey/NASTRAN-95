@@ -21,9 +21,9 @@ test/*.inp
 test/fort.*
 
 # build artifacts
-python/src/nastran95/_data/bin/
-python/src/nastran95/_data/rf/
-python/src/nastran95/_fortran/_obj/
-python/src/nastran95/_fortran/_f2py_build/
-python/src/nastran95/_fortran/_nastran_core*.so
-python/src/nastran95/_fortran/libnastran.a
+python/nastran95/_data/bin/
+python/nastran95/_data/rf/
+python/nastran95/_fortran/_obj/
+python/nastran95/_fortran/_f2py_build/
+python/nastran95/_fortran/_nastran_core*.so
+python/nastran95/_fortran/libnastran.a

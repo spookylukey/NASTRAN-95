@@ -212,4 +212,5 @@ inp_clean/    Demo problem input decks (cleaned)
 demoout/      Reference output for demo problems
 um/           User's Manual text files
 test/         Test runner and scratch area
+python/       Python modules and tests
 ```

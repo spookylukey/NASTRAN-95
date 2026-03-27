@@ -33,8 +33,7 @@ class NastranBuildHook(BuildHookInterface):
         """Compile nastrn and bundle data files into the package."""
         # Resolve paths
         root = Path(self.root)
-        # The NASTRAN repo root is one level up from nastran95/
-        repo_root = root.parent
+        repo_root = root
         build_dir = repo_root / "build"
         src_mis = build_dir / "src_mis"
         src_mds = build_dir / "src_mds"
@@ -50,7 +49,7 @@ class NastranBuildHook(BuildHookInterface):
             return
 
         # Target directories inside the package
-        pkg_data = root / "src" / "nastran95" / "_data"
+        pkg_data = root / "nastran95" / "_data"
         pkg_bin = pkg_data / "bin"
         pkg_rf = pkg_data / "rf"
         pkg_bin.mkdir(parents=True, exist_ok=True)

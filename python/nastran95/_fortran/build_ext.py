@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 # Paths
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 BUILD_DIR = REPO_ROOT / "build"
 SRC_MIS = BUILD_DIR / "src_mis"
 SRC_MDS = BUILD_DIR / "src_mds"

@@ -26,7 +26,7 @@ jobs:
       - name: Build wheels
         run: |
           python -m cibuildwheel \
-            --config-file python/pyproject.toml \
+            --config-file pyproject.toml \
             --output-dir wheelhouse \
             nastran95
         env:
@@ -59,7 +59,7 @@ jobs:
       - name: Build wheels
         run: |
           python -m cibuildwheel `
-            --config-file python/pyproject.toml `
+            --config-file pyproject.toml `
             --output-dir wheelhouse `
             nastran95
         env:
