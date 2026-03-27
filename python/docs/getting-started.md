@@ -70,11 +70,11 @@ TITLE    = CANTILEVER BEAM
   ELSTRESS = ALL
 BEGIN BULK
 GRID    1               0.0     0.0     0.0
-GRID    2              10.0     0.0     0.0
-GRID    3              20.0     0.0     0.0
-GRID    4              30.0     0.0     0.0
-GRID    5              40.0     0.0     0.0
-GRID    6              50.0     0.0     0.0
+GRID    2               10.0    0.0     0.0
+GRID    3               20.0    0.0     0.0
+GRID    4               30.0    0.0     0.0
+GRID    5               40.0    0.0     0.0
+GRID    6               50.0    0.0     0.0
 CBAR    1       1       1       2       0.0     0.0     1.0
 CBAR    2       1       2       3       0.0     0.0     1.0
 CBAR    3       1       3       4       0.0     0.0     1.0
