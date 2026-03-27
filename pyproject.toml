@@ -1,6 +1,6 @@
 [project]
 name = "nastran95"
-version = "0.3.0"
+version = "0.0.1"
 description = "Python wrapper for NASTRAN-95 finite element analysis"
 requires-python = ">=3.12"
 license = "NASA-1.3"
