@@ -87,7 +87,9 @@ before-all = [
 repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel} || cp {wheel} {dest_dir}/"
 
 [tool.cibuildwheel.windows]
+# Install MinGW and compile with -static so the exe has no DLL dependencies
+# beyond KERNEL32/msvcrt (in particular, no libquadmath-0.dll).
 before-all = [
     "choco install mingw -y",
-    "mingw32-make -C build FC=gfortran",
+    "mingw32-make -C build FC=gfortran LFLAGS=-static",
 ]

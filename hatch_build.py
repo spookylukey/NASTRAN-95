@@ -160,9 +160,15 @@ class NastranBuildHook(BuildHookInterface):
 
         print(f"  Compiled {len(objects)} objects")
 
-        # Link with static libgfortran if possible (for manylinux compat)
+        # Link statically to avoid runtime DLL/shared-lib dependencies.
+        # On Linux this avoids libgfortran (for manylinux compat).
+        # On Windows this also avoids libquadmath-0.dll.
         link_flags = list(FLAGS)
-        link_flags.extend(["-static-libgfortran", "-static-libgcc"])
+        is_windows = platform.system() == "Windows"
+        if is_windows:
+            link_flags.append("-static")
+        else:
+            link_flags.extend(["-static-libgfortran", "-static-libgcc"])
 
         cmd = [
             "gfortran", *link_flags,
