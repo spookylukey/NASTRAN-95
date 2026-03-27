@@ -21,7 +21,7 @@ from nastran95.parser import (
 )
 
 # Default paths: prefer bundled data, fall back to repo layout for dev
-_REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 # Maximum path length that the NASTRAN Fortran code can handle.
 # All CHARACTER variables for file paths are declared as CHARACTER*4096.

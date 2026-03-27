@@ -65,7 +65,7 @@ uv run python -m nastran95._fortran.build_ext
 ## Testing
 
 ```bash
-.venv/bin/python -m pytest tests/ -v
+uv run pytest python/tests/ -v
 ```
 
 ## Architecture
