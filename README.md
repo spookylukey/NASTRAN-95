@@ -81,6 +81,28 @@ and run correctly with gfortran. The patched versions live in `build/src_*/`.
 | `src_mds/dbmdia.f` | Changed `DATA SCRATCH / 'SCRA','TCHX' /` to use `4H` Hollerith | CHARACTER literals in DATA for an INTEGER array don't work; Hollerith does |
 | `stubs.f` | New file with stub subroutines `Q8SHPD`, `T6SHPD`, `JACOBD` | Referenced but not defined in COSMIC/NASTRAN source |
 
+### Cross-Compiling for Windows
+
+You can cross-compile a Windows executable from Linux using MinGW-w64, and
+test it locally under Wine:
+
+```bash
+# Install prerequisites
+sudo apt install gfortran-mingw-w64-x86-64 wine
+
+# Cross-compile (produces build/nastrn.exe)
+cd build
+make nastrn.exe
+
+# Test under Wine
+cd ../test
+./run_nastran_wine.sh ../inp_clean/d01011a.inp
+```
+
+The resulting `nastrn.exe` is fully statically linked (only depends on
+KERNEL32.dll and msvcrt.dll), so it runs on any 64-bit Windows without
+additional DLLs.
+
 ### Cleaning the Original Sources
 
 The original source files in `mis/`, `mds/`, `bd/`, and `bin/` have DOS line

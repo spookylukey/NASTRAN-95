@@ -1,6 +1,7 @@
 # Object files and binaries
 *.o
 build/nastrn
+build/nastrn.exe
 build/chkfil
 build/_f2py_build/
 
@@ -13,6 +14,7 @@ __pycache__/
 
 # NASTRAN scratch/output
 test/scratch_*/
+test/scratch_wine_*/
 test/*.out
 test/*.log
 test/*.dic
